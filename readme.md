@@ -6,4 +6,4 @@ Enjoy!
 
 ## Projects
 
-[Basketball Hall of Fame Prediction](https://github.com/sebasdarius/data_science_portfolio/blob/master/Basketball_HOF/Model_Selection.ipynb): A model that gives NBA players' probabilities of making the Basketball Hall of Fame based on career stats and accomplishmments.
+[Basketball Hall of Fame Prediction](https://github.com/sebasdarius/data_science_portfolio/blob/master/Basketball_HOF/Model_Selection.ipynb): A model that gives NBA players' probabilities of making the Basketball Hall of Fame based on career stats and accomplishmments. This project involved scraping data and combining data from several datasets.
