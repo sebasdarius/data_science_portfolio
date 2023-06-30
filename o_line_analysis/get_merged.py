@@ -207,12 +207,13 @@ if __name__=="__main__":
     tracking_merged = add_game_play_player(tracking_merged)
     tracking_merged['playframe'] = tracking_merged['game_play'].astype(str) + tracking_merged['frameId'].astype(str)
 
-    """
+    
     rushers_blockers = get_rushers_blockers_after_snap(tracking_merged)
     scouting_rushers_no_data = get_ambiguous_rushers()
     
     #Remove certain columns in order to speed up the calculations
-    rushers_blockers_temp = rushers_blockers[['game_play_player', 'playframe', 'gameId', 'playId', 'nflId', 'x', 'y', 's', 'dir', 'pff_role']].set_index(['playframe', 'nflId'], drop=False).sort_index()
+    rushers_blockers_temp = rushers_blockers[['game_play_player', 'playframe', 'gameId', 
+                                              'playId', 'nflId', 'x', 'y', 's', 'dir', 'pff_role']]
     blockers = rushers_blockers_temp[rushers_blockers_temp['pff_role'] == "Pass Block"].drop(['pff_role', 'gameId', 'playId'], axis=1)
     rushers = rushers_blockers_temp[rushers_blockers_temp['pff_role'] == "Pass Rush"].drop(['pff_role'], axis=1)
     #only include players that were not initially blocked on the play. These are the players for 
@@ -220,8 +221,8 @@ if __name__=="__main__":
 
     rushers_no_data = rushers[rushers['game_play_player'].isin(scouting_rushers_no_data['game_play_player'])]
     
-    #rushers_no_data = calculate_avg_dist_from_blocker(rushers_no_data)
-    """
+    rushers_no_data = calculate_avg_dist_from_blocker(rushers_no_data)
+    
     tracking_merged.to_csv('tracking_merged.csv', index=False)
     rushers_no_data = pd.read_csv('rushers_no_data.csv')
     rushers_no_data = add_qb_location(rushers_no_data)

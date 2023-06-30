@@ -48,8 +48,8 @@ def process_data(df_flattened):
 # Define the 2D CNN model
 def create_2d_cnn(input_shape, num_outputs):
     inputs = Input(input_shape)
-    x = Conv2D(filters=64, kernel_size=(1, 3), activation='relu')(inputs)
-    x = Conv2D(filters=32, kernel_size=(1, 3), activation='relu')(x)
+    x = Conv2D(filters=32, kernel_size=(2, 3), activation='relu')(inputs)
+    x = Conv2D(filters=16, kernel_size=(1, 3), activation='relu')(x)
     x = Flatten()(x)
     outputs = [Dense(1, activation='sigmoid')(x) for _ in range(num_outputs)]
 
