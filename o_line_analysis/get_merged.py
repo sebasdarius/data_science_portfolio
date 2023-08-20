@@ -183,7 +183,6 @@ def add_velocity(df):
     
     return df_temp
     
-    
 
 def get_speed_towards_qb(df):
     df_temp = df.copy()

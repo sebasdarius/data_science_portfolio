@@ -11,14 +11,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.calibration import calibration_curve
 from tensorflow.keras.models import Model
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Activation, Input
 
 
+
 # Load and process the dataset
 def load_data():
-    df_flattened = pd.read_csv("df_flattened.csv").set_index(['gameId', 'playId'])
+    df_flattened = pd.read_csv("oline_data/df_flattened.csv").set_index(['gameId', 'playId'])
     
     return df_flattened
 
@@ -84,8 +86,16 @@ def evaluate_model(model, X_test, y_test):
     predictions = model.predict(X_test)
     binary_predictions = [np.round(pred) for pred in predictions]
 
+    predictions_stacked = np.hstack(np.hstack(predictions))
     binary_predictions_stacked = np.hstack(np.hstack(binary_predictions))
     y_test_stacked = np.hstack(y_test.values)
+
+    test_predictions = pd.DataFrame()
+    test_predictions['predictions'] = predictions_stacked
+    test_predictions['binary_predictions'] = binary_predictions_stacked
+    test_predictions['isRusher'] = y_test_stacked
+
+    test_predictions.to_csv("test_predictions.csv")
 
     overall_binary_accuracy = accuracy_score(y_test_stacked, binary_predictions_stacked)
     cm = confusion_matrix(y_test_stacked, binary_predictions_stacked)
@@ -103,6 +113,7 @@ def get_four_closest(play):
     predictions.put(four_closest, 1)
 
     return predictions
+
     
 def print_baseline_accuracy(df_flattened):
     df_flattened_loc = df_flattened[[f"x_{i + 1}" for i in range(11)] + [f"y_{i + 1}" for i in range(11)]]
@@ -114,6 +125,21 @@ def print_baseline_accuracy(df_flattened):
     baseline_accuracy = accuracy_score(y_true, baseline_predictions)
     
     print(f"Baseline Accuracy: {baseline_accuracy}")
+
+def create_calibration_curve(df_flattened):
+    y_true_df = df_flattened[[f"isRusher_{i+1}" for i in range(11)]]
+    y_true_arr = np.hstack(y_true_df.values)
+
+    y_pred_df = df_flattened[[f"prediction_{i+1}" for i in range(11)]]
+    y_pred_arr = np.hstack(y_pred_df.values)
+    
+    prob_true, prob_pred = calibration_curve(y_true_arr, y_pred_arr, n_bins=10)
+    
+    plt.figure()
+    plt.plot(prob_true, prob_pred)
+    plt.title("Reliability Curve")
+    plt.xlabel("Predicted Probability")
+    plt.ylabel("True Probability")
     
 # Main function to run the entire pipeline
 if __name__ == "__main__":
