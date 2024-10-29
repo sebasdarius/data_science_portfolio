@@ -124,7 +124,7 @@ def print_baseline_accuracy(df_flattened):
     baseline_predictions = np.hstack(df_flattened_loc.apply(get_four_closest, axis=1))
     baseline_accuracy = accuracy_score(y_true, baseline_predictions)
     
-    print(f"Baseline Accuracy: {baseline_accuracy}")
+    print(f"Baseline Accuracy: {round(baseline_accuracy, 3)}")
 
 def create_calibration_curve(df_flattened):
     y_true_df = df_flattened[[f"isRusher_{i+1}" for i in range(11)]]
